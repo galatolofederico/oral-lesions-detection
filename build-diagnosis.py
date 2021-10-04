@@ -70,12 +70,15 @@ def compute_similarities(features, database):
     return similarities
 
 
-def draw_box(file_name, box, type, model):
+def draw_box(file_name, box, type, model, resize_input=False):
     img = cv2.imread(file_name)
-    img = cv2.resize(img, (800, 800))
+    if resize_input:
+        img = cv2.resize(img, (800, 800))
 
+    height, width, channels = img.shape 
+    
     pred_v = Visualizer(img[:, :, ::-1], model["metadata"], scale=1)
-    instances = Instances((800, 800), pred_boxes=Boxes(torch.tensor(box).unsqueeze(0)), pred_classes=torch.tensor([type]))
+    instances = Instances((height, width), pred_boxes=Boxes(torch.tensor(box).unsqueeze(0)), pred_classes=torch.tensor([type]))
     pred_v = pred_v.draw_instance_predictions(instances)
 
     pred = pred_v.get_image()[:, :, ::-1]
@@ -132,7 +135,7 @@ def explain(file, model):
             lesion["classes"][c_name]["cases"] = list()
             for j, result in zip(range(0, args.top_k), similarities):
                 elem = similarities[result]
-                img = draw_box(os.path.join(args.dataset_folder, "images", elem["file_name"]), elem["box"], elem["type"], model)
+                img = draw_box(os.path.join(args.dataset_folder, "images", elem["file_name"]), elem["box"], elem["type"], model, resize_input=True)
                 cv2.imwrite(os.path.join(args.tmp_folder, "explain_%d_%d_%d.png" % (i, c_id, j)), img)
                 lesion["classes"][c_name]["cases"].append(
                     dict(
