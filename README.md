@@ -9,7 +9,7 @@ git clone https://github.com/galatolofederico/oral-lesions-detection.git
 conda create -n oral-lesions-detection python=3.8
 conda activate oral-lesions-detection
 conda install pytorch torchvision cudatoolkit=11.1 -c pytorch-lts -c nvidia
-pip install sklearn shapely opencv-python fpdf
+pip install sklearn shapely opencv-python
 ```
 
 ### install detectron2
