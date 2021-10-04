@@ -69,7 +69,7 @@ def build_report(files, output):
         \end{figure}
         
 
-        \subsubsection{aaaaDistances}
+        \subsubsection{Distances}
 
         \begin{figure}[H]
             \centering
