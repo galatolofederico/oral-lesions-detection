@@ -125,7 +125,7 @@ python -m scripts.view-dataset --dataset-folder ./datasets/lesions
 ```
 
 ### view-augmentation
-View the augmented dataset
+View an augmented dataset
 
 ```
 python -m scripts.view-augmentation --dataset-folder ./datasets/lesions
@@ -164,7 +164,8 @@ python -m scripts.fit-pca --features-database assets/features/features.json  --o
 Set the environment variable `OPTUNA_STORAGE` to your preferred optuna storage (available storages [here](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine))
 
 ```
-export OPTUNA_STORAGE=sqlite:///optuna.sqlite```
+export OPTUNA_STORAGE=sqlite:///optuna.sqlite
+```
 
 Install optuna
 
