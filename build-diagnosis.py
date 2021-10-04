@@ -48,7 +48,8 @@ def load_model(args):
     return dict(
         predictor=predictor,
         model=model,
-        metadata=metadata
+        metadata=metadata,
+        cfg=cfg
     )
 
 
@@ -85,14 +86,11 @@ def draw_box(file_name, box, type, model):
 
 def explain(file, model):
     database = json.load(open(args.features_database))
-    cv_img = cv2.imread(file)
-    cv_img = cv2.resize(cv_img, (800, 800))
-
-    img = torch.as_tensor(cv_img.astype("float32").transpose(2, 0, 1))
-    instances = forward_model_full(model["model"], img)
+    instances, input = forward_model_full(model["model"], model["cfg"], file)
     
     instances.remove("pred_masks")
-    pred_v = Visualizer(cv_img[:, :, ::-1], model["metadata"], scale=1)
+    
+    pred_v = Visualizer(cv2.cvtColor(input, cv2.COLOR_BGR2RGB), model["metadata"], scale=1)
     pred_v = pred_v.draw_instance_predictions(instances.to("cpu"))
 
     pred = pred_v.get_image()[:, :, ::-1]

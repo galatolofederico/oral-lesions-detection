@@ -10,6 +10,7 @@ from detectron2.structures import Instances
 from detectron2.config import get_cfg
 from detectron2 import model_zoo
 from detectron2.data import detection_utils as utils
+import detectron2.data.transforms as T
 
 
 dataset_registered = False
@@ -80,9 +81,18 @@ def extract_features(model, img, box):
         return output_features
 
 
-def forward_model_full(model, img):
-    height, width = img.shape[1:3]
-    inputs = [{"image": img, "height": height, "width": width}]
+def forward_model_full(model, cfg, img):
+    cv_img = cv2.imread(img)
+
+    height, width = cv_img.shape[:2]
+    transform_gen = T.ResizeShortestEdge(
+        [cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST
+    )
+
+    image = transform_gen.get_transform(cv_img).apply_image(cv_img)
+    image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
+    inputs = [{"image": image, "height": height, "width": width}]
+
     with torch.no_grad():
         images = model.preprocess_image(inputs)
         features = model.backbone(images.tensor) 
@@ -109,4 +119,4 @@ def forward_model_full(model, img):
         instances.set("probs", probs[0][pred_inds])
         instances.set("features", output_features[pred_inds])
         
-        return instances
+        return instances, cv2.resize(cv_img, (height, width))
