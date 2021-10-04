@@ -5,7 +5,7 @@
 ### Clone and install the dependencies
 
 ```
-<clone>
+git clone https://github.com/galatolofederico/oral-lesions-detection.git
 conda create -n oral-lesions-detection python=3.8
 conda activate oral-lesions-detection
 conda install pytorch torchvision cudatoolkit=11.1 -c pytorch-lts -c nvidia
@@ -83,19 +83,19 @@ Simplify the dataset dataset into neoplastic, aphthous and traumatic
 python -m scripts.simplify-dataset --folder ./datasets/lesions
 ```
 
-split dataset into train and test
+Split dataset into train and test
 
 ```
 python -m scripts.dataset-split --folder ./datasets/lesions
 ```
 
-run train
+Run train
 
 ```
 python train.py --dataset-folder ./datasets/lesions
 ```
 
-to see the list of the hyperparameters run
+To see the list of the hyperparameters run
 
 ```
 python train.py --help
@@ -104,56 +104,56 @@ python train.py --help
 ## Scripts
 
 ### simplify-dataset
-simplify the dataset into 3 classes (neoplastic, aphthous, traumatic)
+Simplify the dataset into 3 classes (neoplastic, aphthous, traumatic)
 
 ```
 python -m scripts.simplify-dataset --folder ./datasets/lesions
 ```
 
 ### datasets-split
-split the dataset into train and test
+Split the dataset into train and test
 
 ```
 python -m scripts.dataset-split --folder ./datasets/lesions
 ```
 
 ### view-dataset
-view a dataset
+View a dataset
 
 ```
 python -m scripts.view-dataset --dataset-folder ./datasets/lesions
 ```
 
 ### view-augmentation
-view the augmented dataset
+View the augmented dataset
 
 ```
 python -m scripts.view-augmentation --dataset-folder ./datasets/lesions
 ```
 
 ### extract-tsne-features
-extract features for t-SNE plot 
+Extract features for t-SNE plot 
 
 ```
 python -m scripts.extract-tsne-features --dataset-folder ./datasets/lesions/ --dataset ./datasets/lesions/dataset.json --model ./models/model.pth  --output ./assets/tsne-features.pkl
 ```
 
 ### tsne
-plot the t-SNE map
+Plot the t-SNE map
 
 ```
 python -m scripts.tsne --features ./assets/tsne-features.pkl
 ```
 
 ### build-features-database
-extract features from all the dataset images (used in explain)
+Extract features from all the dataset images (used in explain)
 
 ```
 python -m scripts.build-features-database --dataset-folder ./datasets/lesions --model ./models/model.pth --output ./assets/extracted-features
 ```
 
 ### fit-pca
-fit the PCA used in explain
+Fit the PCA used in explain
 
 ```
 python -m scripts.fit-pca --features-database assets/features/features.json  --output models/fitted_pca.pkl
@@ -161,7 +161,7 @@ python -m scripts.fit-pca --features-database assets/features/features.json  --o
 
 ## Run Hyperparameter Optimization
 
-set the environment variable `OPTUNA_STORAGE` to your preferred optuna storage (available storages [here](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine))
+Set the environment variable `OPTUNA_STORAGE` to your preferred optuna storage (available storages [here](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine))
 
 ```
 export OPTUNA_STORAGE=sqlite:///optuna.sqlite```
@@ -172,13 +172,13 @@ Install optuna
 pip install optuna
 ```
 
-create study
+Create study
 
 ```
 python create-study.py --study-name <your_study_name>
 ```
 
-run trial
+Run trial
 
 ```
 python run-trial.py --study-name <your_study_name>
