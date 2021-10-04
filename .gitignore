@@ -10,7 +10,6 @@ __pycache__/
 metrics.json
 
 /results
-/plots
 /.plotszoo-wandb-cache
 /.optuna-wandb-cache
 
