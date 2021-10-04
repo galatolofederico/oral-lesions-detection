@@ -39,15 +39,17 @@ def plot_gradcam(**kwargs):
         img = image_dict["output"]["instances"][kwargs.instance]
         out = v.draw_instance_predictions(img.to("cpu"))
 
-        matplotlib.use('tkagg')
+        plt.gca().set_axis_off()
+        plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
+            hspace = 0, wspace = 0)
+        plt.margins(0,0)
         plt.imshow(out.get_image(), interpolation='none')
         plt.imshow(image_dict["cam"], cmap='jet', alpha=0.5)
-
 
         if kwargs.output == "":
             plt.show()
         else:
-            plt.savefig(kwargs.output, dpi=kwargs.fig_dpi)
+            plt.savefig(kwargs.output, dpi=kwargs.fig_dpi, bbox_inches='tight')
 
 
 if __name__ == "__main__":

@@ -24,23 +24,6 @@ from plots.plot_pca_point import plot_pca_point
 from plots.plot_histogram_dist import plot_histogram_dist
 from plots.plot_gradcam import plot_gradcam
 
-parser = argparse.ArgumentParser()
-
-parser.add_argument("--model", type=str, required=True)
-parser.add_argument("--pca-model", type=str, required=True)
-parser.add_argument("--file", type=str, required=True)
-parser.add_argument("--features-database", type=str, required=True)
-parser.add_argument("--dataset-folder", type=str, required=True)
-parser.add_argument("--tmp-folder", type=str, default="/tmp/oral-lesions-detection-tmp")
-parser.add_argument("--th", type=float, default=.5)
-parser.add_argument("--distance", type=str, default="cosine")
-parser.add_argument("--top-k", type=int, default=3)
-
-
-args = parser.parse_args()
-
-if not os.path.exists(args.tmp_folder):
-    os.mkdir(args.tmp_folder)
 
 
 def load_model(args):
@@ -179,120 +162,26 @@ def build_files(file, model):
     )
 
 
-def build_diagnosis(files, tmp_folder):
-    tex = r"""
-    \documentclass[12pt]{article}
 
-    \usepackage{graphicx}
-    \usepackage{caption}
-    \usepackage{booktabs}
-    \usepackage{subfig}
-    \usepackage[export]{adjustbox}
-    \usepackage[margin=0.5in]{geometry}
-    \usepackage{placeins}
-    \usepackage{float}
+parser = argparse.ArgumentParser()
 
-    \begin{document}
-    \section{Overview}
-
-    \begin{figure}[H]
-    \centering
-    \subfloat[Input]{
-    \includegraphics[width=0.4\textwidth,valign=c]{%s}
-    }
-    \subfloat[Prediction]{
-    \includegraphics[width=0.4\textwidth,valign=c]{%s}        
-    }
-    \caption{Detection and classification}
-    \end{figure}
-    
-    \section{Lesions}
-    In the next pages you will find a detailed explanation for each leasion.
-    """ % (files["input"], files["prediction"])
-
-    for i, explain in enumerate(files["explain"]):
-        classes = explain["classes"].keys()
-        probs = [explain["classes"][c]["score"] for c in classes]
-        
-        tex += "\\newpage \n \subsection{Lesion N.%d}\n" % (i, )
-
-        tex += r"""
-        \subsubsection{Classification}
-        \begin{figure}[H]
-        \centering
-        \subfloat[Lesion N.%d]{
-        \includegraphics[width=0.3\textwidth,valign=c]{%s}
-        }
-        \subfloat[Class Probabilities]{
-        \adjustbox{valign=c}{
-        \begin{tabular}{lr}
-        \toprule
-        \textbf{Metric} & \textbf{Score} \\ \midrule
-        """ % (i, explain["lesion"])
-
-        for c, p in zip(classes, probs):
-            tex += "%s & %.3f \\%%\\\\\n" % (c, 100*p)
-        tex += "%s & %.3f \\%%\\\\ \\bottomrule\n" % ("healthy tissue", 100*explain["healthy_prob"])
-
-        tex += r"""
-        \end{tabular}
-        }
-        }
-        \caption{Lesion N.%d Classification}
-        \end{figure}
-        
-
-        \subsubsection{aaaaDistances}
-
-        \begin{figure}[H]
-            \centering
-            \subfloat[Lesion N.%d Scatter]{
-                \includegraphics[width=0.5\textwidth,valign=c]{%s}
-            }
-            \subfloat[Lesion N.%d Histogram]{
-                \includegraphics[width=0.5\textwidth,valign=c]{%s}
-            }
-        \end{figure}
-
-        \subsubsection{Saliency Map}
-        \begin{figure}[H]
-            \includegraphics[width=0.5\textwidth,valign=c]{%s}
-            \caption{Lesion N.%d Salicency Map}
-        \end{figure}
-
-        \newpage
-        \subsubsection{Lesion N.%d Nearest Neighbors}
-        """ % (i, i, explain["scatter"], i, explain["hist"], explain["gradcam"], i, i)
+parser.add_argument("--model", type=str, required=True)
+parser.add_argument("--pca-model", type=str, required=True)
+parser.add_argument("--file", type=str, required=True)
+parser.add_argument("--features-database", type=str, required=True)
+parser.add_argument("--dataset-folder", type=str, required=True)
+parser.add_argument("--output", type=str, default="/tmp/oral-lesions-detection-tmp/diagnosis.json")
+parser.add_argument("--tmp-folder", type=str, default="/tmp/oral-lesions-detection-tmp")
+parser.add_argument("--th", type=float, default=.5)
+parser.add_argument("--distance", type=str, default="cosine")
+parser.add_argument("--top-k", type=int, default=3)
 
 
-        max_class = probs.index(max(probs))
-        for ic, (c, p) in enumerate(zip(classes, probs)):
-            #if ic != max_class:
-            #    continue
-            tex += r"""
-            \begin{figure}[H]
-            \centering
-            """
-            for case in explain["classes"][c]["cases"]:
-                tex += r"""
-                \subfloat[dist: %.3f]{
-                \includegraphics[width=0.3\textwidth,valign=c]{%s}
-                }""" % (case["dist"], case["image"])
+args = parser.parse_args()
 
-            tex += r"""
-            \caption{Lesion N.%d 3-NN for %s (prob: %.3f\%%)}
-            \end{figure}
-                """ % (i, c, p*100)
-        tex += "\\newpage"
-
-    tex += r"\end{document}"
-
-    report = open(os.path.join(tmp_folder, "report.tex"), "w")
-    report.write(tex)
-    report.close()
-
+if not os.path.exists(args.tmp_folder):
+    os.mkdir(args.tmp_folder)
 
 model = load_model(args)
 files = build_files(args.file, model)
-
-build_diagnosis(files, args.tmp_folder)
+json.dump(files, open(args.output, "w"))
