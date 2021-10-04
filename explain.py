@@ -22,6 +22,7 @@ from detectron2.structures import Instances
 from src.utils import extract_features, forward_model_full
 from plots.plot_pca_point import plot_pca_point
 from plots.plot_histogram_dist import plot_histogram_dist
+from plots.plot_gradcam import plot_gradcam
 
 parser = argparse.ArgumentParser()
 
@@ -30,8 +31,7 @@ parser.add_argument("--pca-model", type=str, required=True)
 parser.add_argument("--file", type=str, required=True)
 parser.add_argument("--features-database", type=str, required=True)
 parser.add_argument("--dataset-folder", type=str, required=True)
-parser.add_argument("--output", type=str, default="diagnosis.pdf")
-parser.add_argument("--tmp-folder", type=str, default="/tmp/build_diagnosis")
+parser.add_argument("--tmp-folder", type=str, default="/tmp/oral-lesions-detection-tmp")
 parser.add_argument("--th", type=float, default=.5)
 parser.add_argument("--distance", type=str, default="cosine")
 parser.add_argument("--top-k", type=int, default=3)
@@ -129,15 +129,15 @@ def explain(file, model):
         features = features.tolist()
 
         plot_pca_point(point=features, features_database=args.features_database, pca_model=args.pca_model, output=os.path.join(args.tmp_folder, "scatter_%d.png" % (i, )), fig_h=800, fig_w=600, fig_dpi=100)
-
         plot_histogram_dist(point=features, features_database=args.features_database, output=os.path.join(args.tmp_folder, "hist_%d.png" % (i, )), fig_h=800, fig_w=600, fig_dpi=100)
-        
+        plot_gradcam(model=args.model, file=args.file, instance=i, output=os.path.join(args.tmp_folder, "gradcam_%d.png" % (i, )), fig_h=1600, fig_w=1200, fig_dpi=200, th=args.th, layer="backbone.bottom_up.res5.2.conv3")
 
         lesion["healthy_prob"] = healthy_prob
 
         lesion["lesion"] = os.path.join(args.tmp_folder, "explain_%d.png" % (i, ))
         lesion["scatter"] = os.path.join(args.tmp_folder, "scatter_%d.png" % (i, ))
         lesion["hist"] = os.path.join(args.tmp_folder, "hist_%d.png" % (i, ))
+        lesion["gradcam"] = os.path.join(args.tmp_folder, "gradcam_%d.png" % (i, ))
         
 
         lesion["classes"] = dict()
@@ -242,7 +242,7 @@ def build_diagnosis(files, tmp_folder):
         \end{figure}
         
 
-        \subsubsection{Distances}
+        \subsubsection{aaaaDistances}
 
         \begin{figure}[H]
             \centering
@@ -254,9 +254,15 @@ def build_diagnosis(files, tmp_folder):
             }
         \end{figure}
 
+        \subsubsection{Saliency Map}
+        \begin{figure}[H]
+            \includegraphics[width=0.5\textwidth,valign=c]{%s}
+            \caption{Lesion N.%d Salicency Map}
+        \end{figure}
+
         \newpage
         \subsubsection{Lesion N.%d Nearest Neighbors}
-        """ % (i, i, explain["scatter"], i, explain["hist"], i)
+        """ % (i, i, explain["scatter"], i, explain["hist"], explain["gradcam"], i, i)
 
 
         max_class = probs.index(max(probs))
