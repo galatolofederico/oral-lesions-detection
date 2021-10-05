@@ -37,6 +37,8 @@ def plot_gradcam(**kwargs):
         plt.figure(figsize=(kwargs.fig_h/kwargs.fig_dpi, kwargs.fig_w/kwargs.fig_dpi), dpi=kwargs.fig_dpi)
         v = Visualizer(image_dict["image"], metadata, scale=1.0)
         img = image_dict["output"]["instances"][kwargs.instance]
+        img.remove("pred_masks")
+        
         out = v.draw_instance_predictions(img.to("cpu"))
 
         plt.gca().set_axis_off()

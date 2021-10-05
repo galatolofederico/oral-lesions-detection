@@ -119,4 +119,4 @@ def forward_model_full(model, cfg, img):
         instances.set("probs", probs[0][pred_inds])
         instances.set("features", output_features[pred_inds])
         
-        return instances, cv2.resize(cv_img, (height, width))
+        return instances, cv_img
