@@ -40,7 +40,6 @@ predictor = DefaultPredictor(cfg)
 
 def predict(file):
     img = cv2.imread(file)
-    img = cv2.resize(img, (800, 800))
     output = predictor(img)
     output["instances"].remove("pred_masks")
     pred_v = Visualizer(img[:, :, ::-1], metadata, scale=1)
