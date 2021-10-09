@@ -1,5 +1,9 @@
 # oral-lesions-detection
 
+Colab link: https://colab.research.google.com/drive/1jffx1pkT37xJEGaTfi8_9ScYdqjfBG_5?usp=sharing
+
+Reports on the test set link: http://131.114.50.176/owncloud/s/zYMKHGHAe2NRTcA/download
+
 ## Installation
 
 ### Clone and install the dependencies
@@ -37,21 +41,21 @@ python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wh
 Download model and fitted PCA
 ```
 mkdir ./models
-wget http://mlpi.ing.unipi.it/models/oral-lesions-detection/model.pth -O ./models/model.pth
-wget http://mlpi.ing.unipi.it/models/oral-lesions-detection/pca.pkl -O ./models/pca.pkl
+wget http://131.114.50.176/owncloud/s/Tk6nl8Mjah2XeLW/download -O ./models/model.pth
+wget http://131.114.50.176/owncloud/s/F2gPYU8HO7a4MoD/download -O ./models/pca.pkl
 ```
 
 Download dataset
 ```
 mkdir ./datasets
-wget http://mlpi.ing.unipi.it/datasets/oral-lesions-detection/lesions.zip -O ./datasets/lesions.zip
+wget http://131.114.50.176/owncloud/s/zs7J18r37omcMmy/download -O ./datasets/lesions.zip
 unzip ./datasets/lesions.zip -d ./datasets/
 ```
 
 Download features
 ```
 mkdir ./assets
-wget http://mlpi.ing.unipi.it/assets/oral-lesions-detection/features.zip -O ./assets/features.zip
+wget http://131.114.50.176/owncloud/s/zqXO0hrOq2FVLPO/download -O ./assets/features.zip
 unzip ./assets/features.zip -d ./assets
 ```
 
