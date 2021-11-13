@@ -1,9 +1,18 @@
 # oral-lesions-detection
 
-Colab link: https://colab.research.google.com/drive/1jffx1pkT37xJEGaTfi8_9ScYdqjfBG_5?usp=sharing
+Repository for the paper [PAPER TITLE](https://PAPERLINK)
 
-Reports on the test set link: https://131.114.50.176/owncloud/s/zYMKHGHAe2NRTcA/download
-Reports on the train set link: https://131.114.50.176/owncloud/s/BB8SuiBDUolvV9r/download
+
+### **An in-browser demo is available [here](https://colab.research.google.com/drive/1jffx1pkT37xJEGaTfi8_9ScYdqjfBG_5?usp=sharing)**
+
+
+Here you can find the generated explainable reports for the training and test datasets
+
+| dataset | reports link |
+|---------|------|
+| train   | https://131.114.50.176/owncloud/s/BB8SuiBDUolvV9r/download |
+| test    | https://131.114.50.176/owncloud/s/zYMKHGHAe2NRTcA/download |
+
 
 ## Installation
 
@@ -108,56 +117,56 @@ python train.py --help
 
 ## Scripts
 
-### simplify-dataset
+#### simplify-dataset
 Simplify the dataset into 3 classes (neoplastic, aphthous, traumatic)
 
 ```
 python -m scripts.simplify-dataset --folder ./datasets/lesions
 ```
 
-### datasets-split
+#### datasets-split
 Split the dataset into train and test
 
 ```
 python -m scripts.dataset-split --folder ./datasets/lesions
 ```
 
-### view-dataset
+#### view-dataset
 View a dataset
 
 ```
 python -m scripts.view-dataset --dataset-folder ./datasets/lesions
 ```
 
-### view-augmentation
+#### view-augmentation
 View an augmented dataset
 
 ```
 python -m scripts.view-augmentation --dataset-folder ./datasets/lesions
 ```
 
-### extract-tsne-features
+#### extract-tsne-features
 Extract features for t-SNE plot 
 
 ```
 python -m scripts.extract-tsne-features --dataset-folder ./datasets/lesions/ --dataset ./datasets/lesions/dataset.json --model ./models/model.pth  --output ./assets/tsne-features.pkl
 ```
 
-### tsne
+#### tsne
 Plot the t-SNE map
 
 ```
 python -m scripts.tsne --features ./assets/tsne-features.pkl
 ```
 
-### build-features-database
+#### build-features-database
 Extract features from all the dataset images (used in explain)
 
 ```
 python -m scripts.build-features-database --dataset-folder ./datasets/lesions --model ./models/model.pth --output ./assets/extracted-features
 ```
 
-### fit-pca
+#### fit-pca
 Fit the PCA used in explain
 
 ```
