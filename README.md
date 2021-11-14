@@ -1,6 +1,6 @@
 # oral-lesions-detection
 
-Repository for the paper [PAPER TITLE](https://PAPERLINK)
+Repository for the paper [Explainable diagnosis of oral cancer via deep learning and case-based reasoning](https://mlpi.ing.unipi.it/doctoralai/)
 
 
 ### **An in-browser demo is available [here](https://colab.research.google.com/drive/1jffx1pkT37xJEGaTfi8_9ScYdqjfBG_5?usp=sharing)**
@@ -13,6 +13,8 @@ Here you can find the generated explainable reports for the training and test da
 | train   | http://131.114.50.176/owncloud/s/BB8SuiBDUolvV9r/download |
 | test    | http://131.114.50.176/owncloud/s/zYMKHGHAe2NRTcA/download |
 
+
+You can find the dataset [here](https://131.114.50.176/owncloud/s/zs7J18r37omcMmy/download)
 
 ## Installation
 
