@@ -3,7 +3,7 @@
 Repository for the paper [Explainable diagnosis of oral cancer via deep learning and case-based reasoning](https://mlpi.ing.unipi.it/doctoralai/)
 
 
-### **An in-browser demo is available [here](https://colab.research.google.com/drive/1jffx1pkT37xJEGaTfi8_9ScYdqjfBG_5?usp=sharing)**
+### **An in-browser demo is available [here](https://huggingface.co/spaces/galatolo/oral-lesions-detection)**
 
 
 Here you can find the generated explainable reports for the training and test datasets
