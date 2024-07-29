@@ -51,28 +51,35 @@ def train(args, cfg, callback=None):
     trainer = get_trainer(args, cfg, callback=callback)
     trainer.train()
     
-    
-    report, _ = build_report(args, "train_dataset", "train")
-    accuracy = report["train/results/accuracy"]
+    train_report, train_classification_lists = build_report(args, "train_dataset", "train")
+    train_accuracy = train_report["train/results/accuracy"]
+
+    validation_report, validation_classification_lists = build_report(args, "validation_dataset", "validation")
+    validation_accuracy = validation_report["validation/results/accuracy"]
+
+    test_report, test_classification_lists = build_report(args, "test_dataset", "test")
+    test_accuracy = test_report["test/results/accuracy"]
 
     if args.wandb:
         import wandb
-        wandb.log(report)
+        wandb.log(train_report)
+        wandb.log(validation_report)
+        wandb.log(test_report)
 
     if not args.skip_coco_eval:
         print("Train Results:")
         print(trainer._last_eval_results)
 
 
-    report, classification_lists = build_report(args, "test_dataset", "test")
-
     if args.wandb:
         import wandb
         class_names = get_catalogs("train_dataset")["metadata"].thing_classes
-        wandb.sklearn.plot_confusion_matrix(classification_lists["true"], classification_lists["pred"], class_names)
-        wandb.log(report)
+        wandb.sklearn.plot_confusion_matrix(train_classification_lists["true"], train_classification_lists["pred"], class_names)
+        wandb.sklearn.plot_confusion_matrix(validation_classification_lists["true"], validation_classification_lists["pred"], class_names)
+        wandb.sklearn.plot_confusion_matrix(test_classification_lists["true"], test_classification_lists["pred"], class_names)
 
-    return trainer, None if args.skip_coco_eval else trainer._last_eval_results, accuracy
+
+    return trainer, None if args.skip_coco_eval else trainer._last_eval_results, validation_accuracy
 
 def cleanup(args):
     # Wandb fork workaround

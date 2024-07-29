@@ -18,6 +18,7 @@ def register_dataset(args):
     global dataset_registered
     if not dataset_registered:        
         register_coco_instances("train_dataset", {}, os.path.join(args.dataset_folder, "train.json"), os.path.join(args.dataset_folder, "images"))
+        register_coco_instances("validation_dataset", {}, os.path.join(args.dataset_folder, "validation.json"), os.path.join(args.dataset_folder, "images"))
         register_coco_instances("test_dataset", {}, os.path.join(args.dataset_folder, "test.json"), os.path.join(args.dataset_folder, "images"))
         
         dataset_registered = True
